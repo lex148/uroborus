@@ -8,8 +8,8 @@ Gem::Specification.new do |gem|
   gem.version       = Uroborus::VERSION
   gem.authors       = ["Lex Childs"]
   gem.email         = ["lexchilds@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{P2P file Backup system}
+  gem.summary       = %q{P2P file Backup system}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
