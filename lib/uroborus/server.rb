@@ -3,21 +3,21 @@ require 'yaml'
 
 class Uroborus::Server
 
-  attr_reader :peers
-
   def initialize
-    @peers = []
   end
 
   def self.port
     22783
   end
 
-  def add_peer peer
-    @peers << peer
+  def peers
+    Uroborus::Peer.all.map{|p| p.address}
   end
 
-
+  def add_peer address
+    existing = Uroborus::Peer.find_by_address( address )
+    Uroborus::Peer.new({:address => address}).save unless existing
+  end
 
 end
 

@@ -1,3 +1,3 @@
-class Peer < ActiveRecord::Base
+class Uroborus::Peer < ActiveRecord::Base
 
 end
