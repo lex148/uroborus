@@ -2,9 +2,13 @@ require 'helper'
 
 describe Uroborus::Server do
 
+  def reload_subject
+    @subject = Uroborus::Server.new @client
+  end
+
 
   before do
-    @client = Object.new
+    @client = Uroborus::Peer.create({:name => 'lex148'})
     @chunk = Uroborus::Chunk.new(:key => "1", :data => "woot")
     @subject = Uroborus::Server.new @client
   end
@@ -25,14 +29,20 @@ describe Uroborus::Server do
 
   it 'should save the peer list' do
     @subject.add_peer 'woot'
-    @subject = Uroborus::Server.new @client
+    reload_subject
     @subject.peers.must_include 'woot'
   end
 
   it 'should be able to save a chunk' do
     @subject.save @chunk
-    @subject = Uroborus::Server.new @client
+    reload_subject
     @subject.load(@chunk.key).must_equal @chunk.data
+  end
+
+  it 'should scope chunk per peer' do
+    @subject.save @chunk
+    @subject = Uroborus::Server.new Uroborus::Peer.create
+    @subject.load(@chunk.key).must_be_nil
   end
 
 end
