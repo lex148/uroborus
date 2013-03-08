@@ -3,7 +3,8 @@ require 'active_support'
 require 'active_record'
 require "uroborus/version"
 require "uroborus/server"
-require "uroborus/peer"
+require "uroborus/models/peer"
+require "uroborus/models/chunk"
 require "uroborus/exec"
 
 module Uroborus
@@ -20,7 +21,7 @@ ActiveRecord::Base.establish_connection(
   :timeout => 5000
 )
 
-Dir["./db/migrations/*.rb"].each do |m|
+Dir["./db/migrations/*.rb"].sort.each do |m|
   puts "running #{m}"
   require m
   klass = /\/[0-9]*_(.*)\.rb/.match(m)[1].classify.constantize

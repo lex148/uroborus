@@ -4,7 +4,8 @@ describe Uroborus::Server do
 
 
   before do
-    @subject = Uroborus::Server.new
+    @client = Object.new
+    @subject = Uroborus::Server.new @client
   end
 
 
@@ -23,10 +24,15 @@ describe Uroborus::Server do
 
   it 'should save the peer list' do
     @subject.add_peer 'woot'
-    @subject = Uroborus::Server.new
+    @subject = Uroborus::Server.new @client
     @subject.peers.must_include 'woot'
   end
 
+  it 'should be able to save a chunk' do
+    @subject.save 1,"chunk"
+    @subject = Uroborus::Server.new @client
+    @subject.load(1).must_equal "chunk"
+  end
 
 
 end

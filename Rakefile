@@ -12,4 +12,15 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
+Rake::TestTask.new(:console) do |test|
+  #check_dependencies unless ENV['SKIP_DEP_CHECK']
+  #ARGV.shift if ARGV.first == "pry"
+  #ARGV.map! do |arg|
+  #  arg.sub(/^_*/) { |m| "-" * m.size }
+  #end
+  require 'uroborus'
+  require 'pry'
+  Uroborus.pry
+end
+
 task :default => :test
