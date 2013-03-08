@@ -18,4 +18,9 @@ task :pry do |test|
   Uroborus.pry
 end
 
+task :server do |test|
+  require 'uroborus'
+  Uroborus::Exec.start_server
+end
+
 task :default => :test
