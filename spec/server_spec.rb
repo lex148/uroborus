@@ -5,6 +5,7 @@ describe Uroborus::Server do
 
   before do
     @client = Object.new
+    @chunk = Uroborus::Chunk.new(:key => "1", :data => "woot")
     @subject = Uroborus::Server.new @client
   end
 
@@ -29,10 +30,9 @@ describe Uroborus::Server do
   end
 
   it 'should be able to save a chunk' do
-    @subject.save 1,"chunk"
+    @subject.save @chunk
     @subject = Uroborus::Server.new @client
-    @subject.load(1).must_equal "chunk"
+    @subject.load(@chunk.key).must_equal @chunk.data
   end
-
 
 end
