@@ -1,5 +1,5 @@
 class Uroborus::Chunk < ActiveRecord::Base
 
-  belongs_to :peer
+  has_and_belongs_to_many :peers
 
 end
