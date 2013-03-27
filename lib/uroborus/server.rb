@@ -22,10 +22,12 @@ class Uroborus::Server < Sinatra::Base
 
   post '/login' do
     address = request.env["REMOTE_ADDR"]
-    public_key = RSA::Key.new( params[:key][0], params[:key][1]  )
-    return false unless public_key.valid?
-    pair = RSA::KeyPair.new(nil, public_key)
-    return false unless pair.verify(params[:signed_server_ip], address)
+    user = Uroborus::User.find_or_create_by_modulus_and_exponent( params[:key][0].to_s, params[:key][1].to_s )
+    if user.public_key.verify( params[:signed_server_ip], address )
+      session[:current_user] = user
+      return true
+    end
+    false
   end
 
 

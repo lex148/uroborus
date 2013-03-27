@@ -39,6 +39,15 @@ describe Uroborus::Server do
     last_response.status.must_equal 200
   end
 
+  it 'login should record a new user' do
+    signed = @saver_keys.sign '127.0.0.1'
+    key = @saver.to_a
+    post '/login', params={ :key => key, :signed_server_ip => signed }
+    Uroborus::User.all.size.must_equal 1
+    user = Uroborus::User.find_by_modulus_and_exponent( key[0].to_s, key[1].to_s )
+    user.wont_be_nil
+  end
+
   #it 'should add you to the peers list when you save a chunk' do
   #  put "/save", params={:owner_key => @owner, :data => @data, :id => @id }
   #  Uroborus::Peer.all.size.must_equal 1

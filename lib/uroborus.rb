@@ -5,6 +5,7 @@ require 'active_support'
 require 'active_record'
 require "uroborus/version"
 require "uroborus/server"
+require "uroborus/models/user"
 require "uroborus/models/peer"
 require "uroborus/models/chunk"
 require "uroborus/exec"
