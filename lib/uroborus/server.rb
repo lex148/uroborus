@@ -5,8 +5,9 @@ use Rack::Session::Cookie, :secret => (0...50).map{ ('a'..'z').to_a[rand(26)] }.
 
 class Uroborus::Server < Sinatra::Base
 
+
   put '/save' do
-    puts
+    return unless session[:current_user]
     chunk = Uroborus::Chunk.find_or_create_by_global_id_and_owner_key( params[:id], params[:owner_key] )
     chunk.data = params[:data]
     chunk.save!
@@ -14,11 +15,16 @@ class Uroborus::Server < Sinatra::Base
 
 
   post '/load' do
+    return unless session[:current_user]
     chunk = Uroborus::Chunk.find_by_global_id_and_owner_key( params[:id], params[:owner_key] )
     return nil unless chunk
     chunk.data
   end
 
+
+  post '/signout' do
+      session[:current_user] = nil
+  end
 
   post '/login' do
     address = request.env["REMOTE_ADDR"]
