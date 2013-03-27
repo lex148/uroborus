@@ -1,4 +1,6 @@
 require 'rubygems'
+require "uuid"
+require "rsa"
 require 'active_support'
 require 'active_record'
 require "uroborus/version"

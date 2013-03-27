@@ -1,42 +1,57 @@
 require 'helper'
+require 'rack/test'
+set :environment, :test
 
 describe Uroborus::Server do
-
-
-  def reload_subject
-    @subject = Uroborus::Server.new
-  end
-
+  include Rack::Test::Methods
 
   before do
-    @chunk = Uroborus::Chunk.new(:key => "1", :data => "woot")
-    @subject = Uroborus::Server.new
+    @id ||= UUID.new.generate
+    @data = "TESTDATA"
+    @owner = 'owners_super_public_key'
+    #@saver_keys = RSA::KeyPair.generate(3072)
+    @saver_keys = RSA::KeyPair.generate(128)
+    @saver = @saver_keys.public_key
+  end
+
+  def app
+    Uroborus::Server
+  end
+
+  it "should be able to save" do
+    put "/save", params={:owner_key => @owner, :data => @data, :id => @id }
+    last_response.status.must_equal 200
+    Uroborus::Chunk.last.global_id.must_equal @id
+    Uroborus::Chunk.last.data.must_equal @data
   end
 
 
-  it 'should have a port' do
-    Uroborus::Server.port.wont_be_nil
+  it "should be able to load" do
+    put "/save", params={:owner_key => @owner, :data => @data, :id => @id }
+    post '/load', params={ :id => @id, :owner_key => @owner }
+    last_response.status.must_equal 200
+    last_response.body.must_equal @data
   end
 
-
-  it 'should have a list of peers' do
-    @subject.peers.must_be_instance_of Array
+  it 'should authenticate a new user' do
+    signed = @saver_keys.sign '127.0.0.1'
+    post '/login', params={ :key => @saver.to_a, :signed_server_ip => signed }
+    last_response.status.must_equal 200
   end
 
-
-  it 'should save the peer list' do
-    @subject.add_peer 'woot'
-    reload_subject
-    @subject.peers.must_include 'woot'
-  end
+  #it 'should add you to the peers list when you save a chunk' do
+  #  put "/save", params={:owner_key => @owner, :data => @data, :id => @id }
+  #  Uroborus::Peer.all.size.must_equal 1
+  #end
 
 
-  it 'should be able to save a chunk' do
-    @subject.save @chunk
-    reload_subject
-    @subject.load(@chunk.key).must_equal @chunk.data
-  end
-
+  #it "should be able to tell you about other peers" do
+  #  post '/peers'
+  #  last_response.status.must_equal 200
+  #  last_response.body.must_equal []
+  #end
 
 
 end
+
+
