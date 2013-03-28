@@ -9,6 +9,21 @@ describe Uroborus::Server do
     Uroborus::Server
   end
 
+  describe 'without log in' do
+
+    it "should not be able to save" do
+        put "/save", params={:owner_key => @owner, :data => @data, :id => @id }
+        last_response.status.must_equal 401
+    end
+
+    it "should not be able to load" do
+        put "/save", params={:owner_key => @owner, :data => @data, :id => @id }
+        last_response.status.must_equal 401
+    end
+
+
+  end
+
   describe 'while logged in' do
     before do
       @saver_keys = RSA::KeyPair.generate(128)
@@ -16,7 +31,6 @@ describe Uroborus::Server do
       @signed     = @saver_keys.sign '127.0.0.1'
       post '/login', params={ :key => @saver.to_a, :signed_server_ip => @signed }
     end
-
 
     it 'should authenticate a new user' do
       last_response.status.must_equal 200

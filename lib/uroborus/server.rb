@@ -1,13 +1,12 @@
 require 'rubygems'
 require 'sinatra'
 
-use Rack::Session::Cookie, :secret => (0...50).map{ ('a'..'z').to_a[rand(26)] }.join
-
 class Uroborus::Server < Sinatra::Base
+  use Rack::Session::Cookie, :secret => (0...50).map{ ('a'..'z').to_a[rand(26)] }.join
 
 
   put '/save' do
-    #return unless session[:current_user]
+    throw(:halt, [401, "Not authorized\n"]) unless session[:current_user]
     chunk = Uroborus::Chunk.find_or_create_by_global_id_and_owner_key( params[:id], params[:owner_key] )
     chunk.data = params[:data]
     chunk.save!
@@ -15,7 +14,7 @@ class Uroborus::Server < Sinatra::Base
 
 
   post '/load' do
-    #return unless session[:current_user]
+    throw(:halt, [401, "Not authorized\n"]) unless session[:current_user]
     chunk = Uroborus::Chunk.find_by_global_id_and_owner_key( params[:id], params[:owner_key] )
     return nil unless chunk
     chunk.data
