@@ -7,7 +7,7 @@ class Uroborus::Server < Sinatra::Base
 
 
   put '/save' do
-    return unless session[:current_user]
+    #return unless session[:current_user]
     chunk = Uroborus::Chunk.find_or_create_by_global_id_and_owner_key( params[:id], params[:owner_key] )
     chunk.data = params[:data]
     chunk.save!
@@ -15,7 +15,7 @@ class Uroborus::Server < Sinatra::Base
 
 
   post '/load' do
-    return unless session[:current_user]
+    #return unless session[:current_user]
     chunk = Uroborus::Chunk.find_by_global_id_and_owner_key( params[:id], params[:owner_key] )
     return nil unless chunk
     chunk.data
@@ -23,7 +23,7 @@ class Uroborus::Server < Sinatra::Base
 
 
   post '/signout' do
-      session[:current_user] = nil
+    session[:current_user] = nil
   end
 
   post '/login' do

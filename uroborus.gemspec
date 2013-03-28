@@ -12,6 +12,16 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{P2P file Backup system}
   gem.homepage      = ""
 
+  dependencies = %w'rake rsa sinatra activerecord activesupport sqlite3 uuid'
+  dependencies.each do |d|
+    gem.add_dependency d
+  end
+
+  dependencies = %w'pry minitest rack-test'
+  dependencies.each do |d|
+    gem.add_development_dependency d
+  end
+
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
