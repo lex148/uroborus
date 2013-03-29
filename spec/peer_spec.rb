@@ -10,16 +10,16 @@ describe Uroborus::Peer do
     @subject.must_respond_to :chunks
   end
 
-  it 'should have a public_key' do
-    @subject.must_respond_to :public_key
-  end
-
   it 'should have a ranking' do
     @subject.must_respond_to :rank
   end
 
   it 'should have an address' do
     @subject.must_respond_to :address
+  end
+
+  it 'should have an port' do
+    @subject.must_respond_to :port
   end
 
   it 'should respond to connect' do

@@ -6,6 +6,7 @@ class CreateUsersTable < ActiveRecord::Migration
       i.string   :exponent
       i.string   :last_ip
       i.string   :last_port
+      i.integer  :peer_id
     end
   end
 
