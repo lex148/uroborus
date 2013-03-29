@@ -86,7 +86,26 @@ def app
 
       it "should be able to be able to request more peers" do
         post "/peers"
-        last_response.body.must_equal [ ['127.0.0.1',@port] ]
+        last_response.body.must_equal [ ['127.0.0.1',@port] ].to_json
+      end
+
+
+      it "should not let you access other users chunks" do
+        put "/save", params={:owner => @owner.to_a, :data => @data, :id => @id }
+        other = RSA::KeyPair.generate(128)
+        signed     = other.sign '127.0.0.1'
+        post '/login', params={ :key => other.public_key.to_a, :signed_server_ip => signed, :port => 12345 }
+        post '/load', params={ :id => @id, :owner_key => @owner }
+        last_response.status.must_equal 403
+      end
+
+      it "should not let you update other users chunks" do
+        put "/save", params={:owner => @owner.to_a, :data => @data, :id => @id }
+        other = RSA::KeyPair.generate(128)
+        signed     = other.sign '127.0.0.1'
+        post '/login', params={ :key => other.public_key.to_a, :signed_server_ip => signed, :port => 12345 }
+        put "/save", params={:owner => @owner.to_a, :data => @data, :id => @id }
+        last_response.status.must_equal 403
       end
 
 
