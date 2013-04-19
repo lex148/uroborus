@@ -9,21 +9,18 @@ require "uroborus/models/user"
 require "uroborus/models/peer"
 require "uroborus/models/chunk"
 require "uroborus/exec"
+require 'yaml'
 
 module Uroborus
-  # Your code goes here...
 end
 
-#Dir["./uroborus/*.rb"].map{|t| t.match(/.\/(uroborus\/.*).rb/)[1]}.each{|file| require file}
 
 env = ENV["RUBY_ENV"] || 'development'
-ActiveRecord::Base.establish_connection(
-  :adapter  => "sqlite3",
-  :database => "db/#{env}.sqlite3",
-  :pool => 5,
-  :timeout => 5000
-)
+db = YAML::load_file('./config/database.yml')[env]
+puts db
+ActiveRecord::Base.establish_connection( db )
 
+#Run all migrations
 Dir["./db/migrations/*.rb"].sort.each do |m|
   puts "running #{m}"
   require m
