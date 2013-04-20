@@ -1,5 +1,31 @@
 #!/usr/bin/env ruby
 
-require 'uroborus'
-Uroborus::Exec.start_server
+#require 'uroborus'
+#Uroborus::Exec.start_server
+require 'rubygems'
+require 'commander/import'
 
+# :name is optional, otherwise uses the basename of this executable
+program :name, 'Uroborus'
+program :version, '0.0.1'
+program :description, 'P2P Backup of files'
+
+#command :save do |c|
+#  c.syntax = 'uroborus save [file]'
+#  c.description = 'Saves a file to your Peers'
+#  c.action do |args, options|
+#    say 'foo'
+#    say args
+#  end
+#end
+
+command :save do |c|
+  c.syntax = 'uroborus save FILE'
+  c.description = 'Saves a file to your Peers'
+  #c.option 'FILE'
+  c.action do |args, options|
+
+    say "save #{args[0]}"
+    #say "#{options.prefix}bar#{options.suffix}"
+  end
+end

@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{P2P file Backup system}
   gem.homepage      = ""
 
-  dependencies = %w'rake rsa sinatra activerecord activesupport sqlite3 uuid'
+  dependencies = %w'rake rsa sinatra activerecord activesupport sqlite3 uuid commander'
   dependencies.each do |d|
     gem.add_dependency d
   end
